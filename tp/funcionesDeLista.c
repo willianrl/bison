@@ -19,10 +19,6 @@ void ingresarSinRepetir(Lista *lista, char *palabra, int lugar)
 void insertarNodoALista(Lista *lista, char *palabra)
 {
     Lista nuevo_nodo = (Lista)malloc(sizeof(tipoNodo));
-
-    //strcpy(nuevo_nodo->dato,palabra); este puta linea me tomo dos horas en encontrar el error
-    //
-    //printf("se copiara %s asociado a la posicion %d \n ",palabra,nuevo_nodo->pos);
     strcpy(nuevo_nodo->dato,palabra);
     //printf("el valor del nodo dato es: %s y de posicion %d \n ",nuevo_nodo->dato,nuevo_nodo->pos);
     nuevo_nodo->siguiente = *lista;
@@ -93,4 +89,18 @@ void verificarSiPuede(Lista *lista)
     {
         printf("Error semantico\ndebe agregar %d bloques para que funcione correctamente\n",tamanioDePalabra - valorEntreCorchetes);
     }
+}
+
+
+
+
+
+
+
+
+
+
+void mostrarTodo()
+{
+    printf("\n\njejeje todo\n\n");
 }

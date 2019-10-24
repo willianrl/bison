@@ -16,3 +16,5 @@ int encontrePalabra(Lista *,char *);
 void totalDeIdentificadores(Lista *);
 void recorrer(Lista *);
 void verificarSiPuede(Lista *);
+
+void mostrarTodo();
