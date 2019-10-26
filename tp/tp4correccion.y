@@ -50,6 +50,8 @@ struct{
 %token <s> RETURN
 %token <s> CCARACTER
 %token <s> LITERALESCADENA
+%token <s> AUTOASIGNACION
+%token <s> COMPARACION
 %token <s> error
 
 %type <s> identificadoryAsignacion
@@ -72,40 +74,49 @@ line:     '\n'                                    { flag_error=0; printf("\n"); 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   EXPRESIONES  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // flag_expresion
 
-expresion :   expUnaria operador expresion  
-            | expUnaria                     
-            | error                         { flag_expresion = 1; }                                
+
+expresion : expAsignacion
+          | error  { flag_expresion = 1; }
 ;
-operador :    '=' | '+' '=' | '-' '=' | '*' '=' | '/' '=' | '%' '=' 
-            | '|' '|' | '&' '&' | '=' '=' | '!' '='                 
-            | '<' | '>' | '<' '=' | '>' '='                          
-            | '+' | '-'                                              
-            | '*' | '/' | '%'   
-            | error                         { printf("Un \"OPERADOR\" no es valido\n"); flag_expresion = 1; }                                  
+expAsignacion :   expUnaria operAsignacion expAsignacion
+                | expBinaria
 ;
-expUnaria :   expPostfijo  
+operAsignacion : '=' | AUTOASIGNACION | error   { printf("Un \"OPERADOR\" no es valido\n"); flag_expresion = 1; }
+; 
+expBinaria :  expUnaria operBinario expBinaria     { control( $<s.tipo>1, $<s.caracter>2, $<s.tipo>3); }
+            | expUnaria
+;
+operBinario :    
+            '|' '|' | '&' '&' 
+            | COMPARACION
+            | '+' | '-'
+            | '*' | '/' | '%'
+            | error  { printf("Un \"OPERADOR\" no es valido\n"); flag_expresion = 1; }
+;
+expUnaria :   expPostfijo
             | operUnario expUnaria
             | incremento expUnaria
             | expUnaria incremento
 ;
-incremento :  '+' '+' | '-' '-' | error     { printf("Un \"OPERADOR\" no es valido\n"); flag_expresion = 1; } ;                  
-operUnario :  '&' | '*' | '!' | error       { printf("Un \"OPERADOR\" no es valido\n"); flag_expresion = 1; }  ;                   
+incremento :  '+' '+' | '-' '-' | error     { printf("Un \"OPERADOR\" no es valido\n"); flag_expresion = 1; };
+operUnario :  '&' | '*' | '!' | error        { printf("Un \"OPERADOR\" no es valido\n"); flag_expresion = 1; };
 
-expPostfijo :    expPrimaria   
-               | expPostfijo '[' expresion ']'
-               | expPostfijo '(' listaDeArgumentos ')'
+expPostfijo :     expPrimaria
+                | expPostfijo '[' expresion ']'
+                | expPostfijo '(' listaDeArgumentos ')'
 ;
 listaDeArgumentos :   expresion
                     | listaDeArgumentos ',' expresion
-                    | /* vac�o */
+                    | /* vacio */
 ;
-expPrimaria :   IDENTIFICADOR
-              | NUM                            
-              | '(' expresion ')'
-              | CCARACTER                             
-              | LITERALESCADENA                        
-              | error                       { printf("No se reconocio la \"CATEGORIA LEXICA\"\n"); flag_expresion = 1; }
+expPrimaria :     NUM
+                | '(' expresion ')'
+                | CCARACTER
+                | LITERALESCADENA
+                | IDENTIFICADOR
+                | error  { printf("No se reconocio la \"CATEGORIA LEXICA\"\n"); flag_expresion = 1; }
 ;
+
 
 
 

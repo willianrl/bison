@@ -17,4 +17,7 @@ void totalDeIdentificadores(Lista *);
 void recorrer(Lista *);
 void verificarSiPuede(Lista *);
 
+void control(int, char, int );
+void comparar(int, int, char*);
+
 void mostrarTodo();

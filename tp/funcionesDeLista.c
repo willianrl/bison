@@ -1,4 +1,8 @@
 #include "funcionesDeLista.h"
+#define CARACTER 1
+#define CADENA 2
+#define NUMERO 3
+
 
 void ingresarSinRepetir(Lista *lista, char *palabra, int lugar)
 {
@@ -91,8 +95,45 @@ void verificarSiPuede(Lista *lista)
     }
 }
 
+void control(int tipoA, char operacion, int tipoB)
+{
+    switch(operacion)
+    {
+    case '+':
+        comparar(tipoA, tipoB, "sumar");
+        break;
+    case '-':
+        comparar(tipoA, tipoB, "restar");
+        break;
+    case '*':
+        comparar(tipoA, tipoB, "multiplicar");
+        break;
+    case '/':
+       comparar(tipoA, tipoB, "dividir");
+        break;
+    }
 
+}
 
+void comparar(int tipoA, int tipoB, char *operacion)
+{
+     if((tipoA == CARACTER && tipoB == CARACTER) || (tipoA == NUMERO && tipoB == NUMERO) || (tipoA == NUMERO && tipoB == CARACTER) || (tipoA == CARACTER && tipoB == NUMERO) )
+        {
+            printf("bien\n");
+        }
+        else if((tipoA == CARACTER && tipoB == CADENA) || (tipoA == CADENA && tipoB == CARACTER))
+        {
+            printf("Error, no se puede %s un caracter con un string\n", operacion);
+        }
+        else if((tipoA == NUMERO && tipoB == CADENA) || (tipoA == CADENA && tipoB == NUMERO))
+        {
+            printf("Error, no se puede %s un numero con un string\n", operacion);
+        }
+        else
+        {
+            printf("No se pueden %s strings\n", operacion);
+        }
+}
 
 
 

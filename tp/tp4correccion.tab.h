@@ -51,7 +51,9 @@
      FOR = 267,
      RETURN = 268,
      CCARACTER = 269,
-     LITERALESCADENA = 270
+     LITERALESCADENA = 270,
+     AUTOASIGNACION = 271,
+     COMPARACION = 272
    };
 #endif
 
@@ -75,7 +77,7 @@ struct{
 
 
 /* Line 1676 of yacc.c  */
-#line 79 "tp4correccion.tab.h"
+#line 81 "tp4correccion.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

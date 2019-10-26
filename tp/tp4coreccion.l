@@ -35,9 +35,10 @@ return    { strcpy(yylval.s.cadena, yytext); return RETURN;}
 "]"       { return ']'; }
 "&"       { return '&'; }
 "|"       { return '|'; }
-"<"       { return '<'; }
-">"       { return '>'; }
 "!"       { return '!'; }
+
+"+=" | "-=" | "*=" | "/=" | "%=" | "<<=" | ">>=" | "&=" | "|="    { strcpy(yylval.s.cadena, yyttext); return AUTOASIGNACION; }
+"<" | ">" | "<=" | ">=" | "==" | "!="                             { strcpy(yylval.s.cadena, yytext); return COMPARACION; }
 
 "\n"    { return '\n'; }
 
