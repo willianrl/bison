@@ -18,9 +18,9 @@ int flag_error = 0,
     flag_funciones = 0,
     flag_expresion = 0,
     flag_sentencia = 0,
-    flag_general = 0;
-    flag_if = 0;
-    flag_datos = 0;
+    flag_general = 0,
+    flag_if = 0,
+    flag_datos = 0,
     flag_bucles = 0;
 
 char *funcion;
@@ -57,9 +57,9 @@ input:    /* vac�o */
         | input line
 ;
 line:     '\n'                                    { flag_error=0; printf("\n"); }
-        | declaracionyDefinicionDeFunciones '\n'  { flag_error=0; printf("\n----------------------------------------------------------------------------------\n"); }
-        | sentencia '\n'                          { flag_general=0; flag_error=0; printf("\n----------------------------------------------------------------------------------\n"); }
-        //| expresion '\n'                          { flag_error=0; printf("\n----------------------------------------------------------------------------------\n"); }
+        | declaracionyDefinicionDeFunciones '\n'  { flag_error=0;                                         printf("\n----------------------------------------------------------------------------------\n"); }
+        | sentencia '\n'                          { flag_general=0; flag_error=0;                         printf("\n----------------------------------------------------------------------------------\n"); }
+        | expresion '\n'                          { flag_error=0;                                         printf("\n----------------------------------------------------------------------------------\n"); }
         | error '\n'                              { flag_error=0; printf("No se reconocio la entrada\n"); printf("\n----------------------------------------------------------------------------------\n"); }
 ;
 
@@ -181,25 +181,24 @@ expOP :   expresion                                         { if(flag_expresion 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   SENTENCIA DECLARACION DE DATOS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // flag_SentDeclaraciones 
 
-sentenciaDeclaracion :  TIPODATO listaDeIdentificadores { if(flag_datos == 0){ printf("Varibles de tipo \"%s\"\n", $1); } } finalizador { if(flag_datos==1){flag_datos = 0; flag_SentDeclaraciones = 1;}}                       
-                      | error finalizador { printf("Falto el TIPO DE DATO\n"); flag_datos = 1; }
+sentenciaDeclaracion :  TIPODATO listaDeIdentificadores { if(flag_datos == 0){ printf("Varibles de tipo \"%s\"\n", $1); } } finalizador 		{ if(flag_datos==1){flag_datos = 0; flag_SentDeclaraciones = 1;}}                       
+                      | error finalizador 																										{ printf("Falto el TIPO DE DATO\n"); flag_datos = 1; }
 ;
 listaDeIdentificadores :  identificadoryAsignacion
                         | listaDeIdentificadores ',' identificadoryAsignacion
 ;
-identificadoryAsignacion:   IDENTIFICADOR opcional                    { if(flag_datos == 0){ ingresarSinRepetir(&listaIdentificador, $1, 1); } }                             
-                          | IDENTIFICADOR opcional '=' valor          { if(flag_datos == 0){ ingresarSinRepetir(&listaIdentificador, $1, 2); } }  
-                          | error                                     { if(flag_datos == 0){ printf("Falta IDENTIFICADOR\n"); flag_datos = 1;} }                                          
+identificadoryAsignacion:   IDENTIFICADOR opcional                    																			{ if(flag_datos == 0){ ingresarSinRepetir(&listaIdentificador, $1, 1); } }                             
+                          | IDENTIFICADOR opcional '=' expresion         																		{ if(flag_datos == 0){ ingresarSinRepetir(&listaIdentificador, $1, 2); } }
+						  | NUM opcional 																										{ printf(" errror LValue \n"); flag_datos = 1;}
+                          | error                                     																			{ if(flag_datos == 0){ printf("Falta IDENTIFICADOR\n"); flag_datos = 1;} }                                          
 ;
 //printf("Se declaro el IDENTIFICADOR \"%s\"\n", $1); 
 opcional :  '[' ']'
           | '[' NUM ']'                                                                                                                
           | /* VACIO */
 ;
-valor:  expresion      { if(flag_expresion == 1) { flag_expresion =0; flag_datos = 1;} }                                                
-;
 finalizador:  ';' 
-            |  error { if(flag_datos == 0){ printf("Falto el caracter de corte\n"); flag_datos = 1;} }                                                                                                                              
+            |  error 																															{ if(flag_datos == 0){ printf("Falto el caracter de corte\n"); flag_datos = 1;} }                                                                                                                              
 ;
 
 
@@ -219,13 +218,12 @@ listaDeParametros :  parametro
 ;
 parametro :   TIPODATO IDENTIFICADOR 
             | TIPODATO 
-            |                
             | error                      { flag_funciones = 1; }
 
 ;
 
 cuerpo:   ';'                           { funcion = "declaro"; }
-        | sentCompuesta                 { if(flag_general ==1){flag_general =0; flag_funciones = 1; } funcion = "definio"; }
+        | sentCompuesta                 { if(flag_general ==1){flag_general =0; flag_funciones = 1; }; funcion = "definio"; }
         | error                         { printf("Se esperaba un punto y como o una sentencia compuesta\n"); flag_funciones = 1; }
 ;
 
@@ -234,6 +232,8 @@ cuerpo:   ';'                           { funcion = "declaro"; }
 
 int main(){
     //yydebug = 1;
-    //yyin = fopen("archivo.txt", "r");
+    yyin = fopen("archivo.txt", "r");
+	
     yyparse();
+	mostrarTodo();
 }
