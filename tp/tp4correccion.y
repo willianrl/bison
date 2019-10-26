@@ -28,28 +28,31 @@ char *funcion;
 %}
 
 %union {
-char cadena[30];
-char caracter;
-int entero;
-int tipoDato;
+struct{
+  char cadena[30];
+  char caracter;
+  int entero;
+  int tipo;
+}s;
+
 }
 
-%token <tipoDato> NUM
-%token <cadena> TIPODATO
-%token <cadena> IDENTIFICADOR
-%token <cadena> IF
-%token <cadena> ELSEIF
-%token <cadena> ELSE
-%token <cadena> SWITCH
-%token <cadena> DO 
-%token <cadena> WHILE 
-%token <cadena> FOR
-%token <cadena> RETURN
-%token <tipoDato> CCARACTER
-%token <tipoDato> LITERALESCADENA
-%token <cadena> error
+%token <s> NUM
+%token <s> TIPODATO
+%token <s> IDENTIFICADOR
+%token <s> IF
+%token <s> ELSEIF
+%token <s> ELSE
+%token <s> SWITCH
+%token <s> DO 
+%token <s> WHILE 
+%token <s> FOR
+%token <s> RETURN
+%token <s> CCARACTER
+%token <s> LITERALESCADENA
+%token <s> error
 
-%type <cadena> identificadoryAsignacion
+%type <s> identificadoryAsignacion
 
 %%
 
@@ -167,7 +170,7 @@ sentIteracion :   FOR    { printf("Se declaro un bucle \"FOR\"\n"); }      '(' e
                 | WHILE  { printf("Se declaro un bucle \"WHILE\"\n"); }    '(' expresion  {if(flag_expresion==1){flag_expresion=0;flag_bucles=1;}} ')' sentCompuesta  {if(flag_general==1){flag_bucles=1;}} {if(flag_bucles == 1){flag_bucles=0; flag_SentIteracion=1; }}                               
                 | DO     { printf("Se declaro un bucle \"DO WHILE\"\n"); } sentCompuesta {if(flag_general==1){flag_bucles=1;}} WHILE '(' expresion {if(flag_expresion ==1){flag_expresion=0;flag_bucles=1;}}  ')' ';'   {if(flag_bucles == 1){flag_bucles=0; flag_SentIteracion=1; }}                   
 ;
-expOrDeclaracion:   TIPODATO IDENTIFICADOR '=' expresion    { if(flag_expresion == 1){ printf("Un parametro no fue reconocido en la \"SENTENCIA DE ITERRACION\"\n"); flag_bucles = 1; flag_expresion = 0; ingresarSinRepetir(&listaIdentificador, $1, 2); } }           
+expOrDeclaracion:   TIPODATO IDENTIFICADOR '=' expresion    { if(flag_expresion == 1){ printf("Un parametro no fue reconocido en la \"SENTENCIA DE ITERRACION\"\n"); flag_bucles = 1; flag_expresion = 0; ingresarSinRepetir(&listaIdentificador, $<s.cadena>1, 2); } }           
                   | expOP
                   | error                                   { if(flag_bucles == 0 && flag_bucles == 0){ printf("Un parametro no fue reconocido en la \"SENTENCIA DE ITERRACION\"\n"); flag_bucles = 1; } }
 ;
@@ -181,16 +184,16 @@ expOP :   expresion                                         { if(flag_expresion 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   SENTENCIA DECLARACION DE DATOS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // flag_SentDeclaraciones 
 
-sentenciaDeclaracion :  TIPODATO listaDeIdentificadores { if(flag_datos == 0){ printf("Varibles de tipo \"%s\"\n", $1); } } finalizador 		{ if(flag_datos==1){flag_datos = 0; flag_SentDeclaraciones = 1;}}                       
+sentenciaDeclaracion :  TIPODATO listaDeIdentificadores { if(flag_datos == 0){ printf("Varibles de tipo \"%s\"\n", $<s.cadena>1); } } finalizador 		{ if(flag_datos==1){flag_datos = 0; flag_SentDeclaraciones = 1;}}                       
                       | error finalizador 																										{ printf("Falto el TIPO DE DATO\n"); flag_datos = 1; }
 ;
 listaDeIdentificadores :  identificadoryAsignacion
                         | listaDeIdentificadores ',' identificadoryAsignacion
 ;
-identificadoryAsignacion:   IDENTIFICADOR opcional                    																			{ if(flag_datos == 0){ ingresarSinRepetir(&listaIdentificador, $1, 1); } }                             
-                          | IDENTIFICADOR opcional '=' expresion         																		{ if(flag_datos == 0){ ingresarSinRepetir(&listaIdentificador, $1, 2); } }
-						  | NUM opcional 																										{ printf(" errror LValue \n"); flag_datos = 1;}
-                          | error                                     																			{ if(flag_datos == 0){ printf("Falta IDENTIFICADOR\n"); flag_datos = 1;} }                                          
+identificadoryAsignacion:   IDENTIFICADOR opcional                    											{ if(flag_datos == 0){ ingresarSinRepetir(&listaIdentificador, $<s.cadena>1, 1); } }                             
+                          | IDENTIFICADOR opcional '=' expresion         										{ if(flag_datos == 0){ ingresarSinRepetir(&listaIdentificador, $<s.cadena>1, 2); } }
+						              | NUM opcional 																										{ printf(" errror LValue \n"); flag_datos = 1;}
+                          | error                                     											{ if(flag_datos == 0){ printf("Falta IDENTIFICADOR\n"); flag_datos = 1;} }                                          
 ;
 //printf("Se declaro el IDENTIFICADOR \"%s\"\n", $1); 
 opcional :  '[' ']'
@@ -207,7 +210,7 @@ finalizador:  ';'
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  DECLARACION Y DEFINICION DE FUNCIONES  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // flag a utilizar   flag_funciones 
 
-declaracionyDefinicionDeFunciones :   TIPODATO IDENTIFICADOR { printf("Se identifico a la funcion \"%s\" de tipo \"%s\"\n", $2, $1); } parametros cuerpo { if(flag_funciones == 0){ printf("Se %s correctamente la funcion: \"%s\"\n", funcion, $2); } else { printf("Se definio/declaro incorrectamente la funcion \"%s\"\n", $2); flag_funciones = 0; } } 
+declaracionyDefinicionDeFunciones :   TIPODATO IDENTIFICADOR { printf("Se identifico a la funcion \"%s\" de tipo \"%s\"\n", $<s.cadena>2, $<s.cadena>1); } parametros cuerpo { if(flag_funciones == 0){ printf("Se %s correctamente la funcion: \"%s\"\n", funcion, $<s.cadena>2); } else { printf("Se definio/declaro incorrectamente la funcion \"%s\"\n", $<s.cadena>2); flag_funciones = 0; } } 
                                     | error '(' ')' cuerpo { printf("Se definio/declaro incorrectamente la funcion\n"); flag_funciones = 0; }                                              
 ;
 parametros :  '(' listaDeParametros ')'  { if(flag_funciones == 0){ printf("Se declararon los parametros de la funcion correctamente\n"); } else{ printf("Se declararon incorrectamente los parametros de la funcion\n"); } }

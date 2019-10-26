@@ -64,15 +64,18 @@ typedef union YYSTYPE
 /* Line 1676 of yacc.c  */
 #line 30 "tp4correccion.y"
 
-char cadena[30];
-char caracter;
-int entero;
-int tipoDato;
+struct{
+  char cadena[30];
+  char caracter;
+  int entero;
+  int tipo;
+}s;
+
 
 
 
 /* Line 1676 of yacc.c  */
-#line 76 "tp4correccion.tab.h"
+#line 79 "tp4correccion.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

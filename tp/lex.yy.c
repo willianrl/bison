@@ -437,7 +437,10 @@ char *yytext;
 #include <string.h>
 #include <stdlib.h>
 
-#line 441 "lex.yy.c"
+#define CARACTER 1
+#define CADENA 2
+#define NUMERO 3
+#line 444 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -588,10 +591,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 9 "tp4coreccion.l"
+#line 12 "tp4coreccion.l"
 
 
-#line 595 "lex.yy.c"
+#line 598 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -676,175 +679,175 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 11 "tp4coreccion.l"
-{ strcpy(yylval.cadena, yytext); return DO; }
+#line 14 "tp4coreccion.l"
+{ strcpy(yylval.s.cadena, yytext); return DO; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 12 "tp4coreccion.l"
-{ strcpy(yylval.cadena, yytext); return WHILE; }
+#line 15 "tp4coreccion.l"
+{ strcpy(yylval.s.cadena, yytext); return WHILE; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 13 "tp4coreccion.l"
-{ strcpy(yylval.cadena, yytext); return FOR; }
+#line 16 "tp4coreccion.l"
+{ strcpy(yylval.s.cadena, yytext); return FOR; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 14 "tp4coreccion.l"
-{ strcpy(yylval.cadena, yytext); return IF; }
+#line 17 "tp4coreccion.l"
+{ strcpy(yylval.s.cadena, yytext); return IF; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 15 "tp4coreccion.l"
-{ strcpy(yylval.cadena, yytext); return ELSE; }
+#line 18 "tp4coreccion.l"
+{ strcpy(yylval.s.cadena, yytext); return ELSE; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 16 "tp4coreccion.l"
-{ strcpy(yylval.cadena, yytext); return ELSEIF; }
+#line 19 "tp4coreccion.l"
+{ strcpy(yylval.s.cadena, yytext); return ELSEIF; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 17 "tp4coreccion.l"
-{ strcpy(yylval.cadena, yytext); return SWITCH; }
+#line 20 "tp4coreccion.l"
+{ strcpy(yylval.s.cadena, yytext); return SWITCH; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 18 "tp4coreccion.l"
-{ strcpy(yylval.cadena, yytext); return RETURN;}
+#line 21 "tp4coreccion.l"
+{ strcpy(yylval.s.cadena, yytext); return RETURN;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 19 "tp4coreccion.l"
+#line 22 "tp4coreccion.l"
 { return '='; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 20 "tp4coreccion.l"
+#line 23 "tp4coreccion.l"
 { return ','; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 21 "tp4coreccion.l"
+#line 24 "tp4coreccion.l"
 { return ';'; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 22 "tp4coreccion.l"
-{ return '+'; }
+#line 25 "tp4coreccion.l"
+{ yylval.s.caracter = yytext[0]; return '+'; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 23 "tp4coreccion.l"
-{ return '-'; }
+#line 26 "tp4coreccion.l"
+{ yylval.s.caracter = yytext[0]; return '-'; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 24 "tp4coreccion.l"
-{ return '*'; }
+#line 27 "tp4coreccion.l"
+{ yylval.s.caracter = yytext[0]; return '*'; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 25 "tp4coreccion.l"
-{ return '/'; }
+#line 28 "tp4coreccion.l"
+{ yylval.s.caracter = yytext[0]; return '/'; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 26 "tp4coreccion.l"
-{ return '%'; }
+#line 29 "tp4coreccion.l"
+{ yylval.s.caracter = yytext[0]; return '%'; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 27 "tp4coreccion.l"
+#line 30 "tp4coreccion.l"
 { return ')'; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 28 "tp4coreccion.l"
+#line 31 "tp4coreccion.l"
 { return '('; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 29 "tp4coreccion.l"
+#line 32 "tp4coreccion.l"
 { return '{'; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 30 "tp4coreccion.l"
+#line 33 "tp4coreccion.l"
 { return '}'; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 31 "tp4coreccion.l"
+#line 34 "tp4coreccion.l"
 { return '['; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 32 "tp4coreccion.l"
+#line 35 "tp4coreccion.l"
 { return ']'; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 33 "tp4coreccion.l"
+#line 36 "tp4coreccion.l"
 { return '&'; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 34 "tp4coreccion.l"
+#line 37 "tp4coreccion.l"
 { return '|'; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 35 "tp4coreccion.l"
+#line 38 "tp4coreccion.l"
 { return '<'; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 36 "tp4coreccion.l"
+#line 39 "tp4coreccion.l"
 { return '>'; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 37 "tp4coreccion.l"
+#line 40 "tp4coreccion.l"
 { return '!'; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 39 "tp4coreccion.l"
+#line 42 "tp4coreccion.l"
 { return '\n'; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 41 "tp4coreccion.l"
-{ strcpy(yylval.cadena, yytext); return TIPODATO; }
+#line 44 "tp4coreccion.l"
+{ strcpy(yylval.s.cadena, yytext);                                                             return TIPODATO; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 42 "tp4coreccion.l"
-{ strcpy(yylval.cadena, yytext); return IDENTIFICADOR; }
+#line 45 "tp4coreccion.l"
+{ strcpy(yylval.s.cadena, yytext);                                                             return IDENTIFICADOR; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 43 "tp4coreccion.l"
-{ yylval.tipoDato = 1;  return NUM; }
+#line 46 "tp4coreccion.l"
+{ strcpy(yylval.s.cadena, yytext); yylval.s.entero = atoi(yytext); yylval.s.tipo = NUMERO;     return NUM; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 44 "tp4coreccion.l"
-{ yylval.tipoDato = 2;  return LITERALESCADENA; }
+#line 47 "tp4coreccion.l"
+{ strcpy(yylval.s.cadena, yytext); yylval.s.tipo = CADENA;                                     return LITERALESCADENA; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 45 "tp4coreccion.l"
-{ yylval.tipoDato = 3;  return CCARACTER; }
+#line 48 "tp4coreccion.l"
+{ yylval.s.caracter = yytext[1]; yylval.s.entero = yytext[1]; yylval.s.tipo = CARACTER;        return CCARACTER; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 51 "tp4coreccion.l"
+#line 54 "tp4coreccion.l"
 ECHO;
 	YY_BREAK
-#line 848 "lex.yy.c"
+#line 851 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1730,7 +1733,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 51 "tp4coreccion.l"
+#line 54 "tp4coreccion.l"
 
   
    
