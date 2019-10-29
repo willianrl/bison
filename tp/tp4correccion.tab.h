@@ -39,21 +39,32 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     NUM = 258,
-     TIPODATO = 259,
-     IDENTIFICADOR = 260,
-     IF = 261,
-     ELSEIF = 262,
-     ELSE = 263,
-     SWITCH = 264,
-     DO = 265,
-     WHILE = 266,
-     FOR = 267,
-     RETURN = 268,
-     CCARACTER = 269,
-     LITERALESCADENA = 270,
-     AUTOASIGNACION = 271,
-     COMPARACION = 272
+     IDENTIFICADOR = 258,
+     NUM = 259,
+     CCARACTER = 260,
+     LITERALESCADENA = 261,
+     TIPODATO = 262,
+     IF = 263,
+     ELSEIF = 264,
+     ELSE = 265,
+     SWITCH = 266,
+     DO = 267,
+     WHILE = 268,
+     FOR = 269,
+     RETURN = 270,
+     OR = 271,
+     AND = 272,
+     INCREMENTO = 273,
+     DECREMENTO = 274,
+     SUMAASIGNACION = 275,
+     RESTAASIGNACION = 276,
+     MULTIASIGNACION = 277,
+     DIVASIGNACION = 278,
+     RESTOASIGNACION = 279,
+     MENORIGUAL = 280,
+     MAYORIGUAL = 281,
+     IGUALDAD = 282,
+     DISTINTO = 283
    };
 #endif
 
@@ -64,7 +75,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 30 "tp4correccion.y"
+#line 33 "tp4correccion.y"
 
 struct{
   char cadena[30];
@@ -77,7 +88,7 @@ struct{
 
 
 /* Line 1676 of yacc.c  */
-#line 81 "tp4correccion.tab.h"
+#line 92 "tp4correccion.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

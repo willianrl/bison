@@ -4,38 +4,39 @@
 #define NUMERO 3
 
 
-void ingresarSinRepetir(Lista *lista, char *palabra, int lugar)
+void ingresarSinRepetir(Lista *lista, char *palabra, char *tipoDato, int lugar)
 {
     //printf("se va ha insertar la palabara %s y esta asociado a la posicion %d \n",palabra,posicion);
-    if (encontrePalabra(lista,palabra)){
-        printf("La \"VARIABLE\" \"%s\" ha sido declarada anteriormente\n",palabra);
+    if (encontrarPalabra(lista, palabra)){
+        printf("\nLa \"VARIABLE\" \"%s\" ha sido declarada anteriormente\n", palabra);
     }
     else {
         //printf("se va ha insertar la palabara %s en la posicion %d \n",palabra,posicion);
-        insertarNodoALista(lista,palabra);
+        insertarNodoALista(lista, palabra, tipoDato);
         if(lugar == 1)
-            printf("Se ha declaro la variable \"%s\"\n",palabra);
+            printf("\nSe ha declaro la variable \"%s\"\n", palabra);
         if(lugar == 2)
-            printf("Inicializado a la variable \"%s\"\n",palabra);
+            printf("\nInicializado a la variable \"%s\"\n", palabra);
     }
 }
 
-void insertarNodoALista(Lista *lista, char *palabra)
+void insertarNodoALista(Lista *lista, char *palabra,  char *tipoDato)
 {
     Lista nuevo_nodo = (Lista)malloc(sizeof(tipoNodo));
-    strcpy(nuevo_nodo->dato,palabra);
+    strcpy(nuevo_nodo->tipoDato, tipoDato);
+    strcpy(nuevo_nodo->dato, palabra);
     //printf("el valor del nodo dato es: %s y de posicion %d \n ",nuevo_nodo->dato,nuevo_nodo->pos);
     nuevo_nodo->siguiente = *lista;
     *lista = nuevo_nodo;
 }
 
-int encontrePalabra(Lista *lista, char *palabra)
+int encontrarPalabra(Lista *lista, char *palabra)
 {
     Lista actual = *lista;
 
     while(actual!=NULL)
     {
-        if(strcmp(actual->dato,palabra) == 0)
+        if(strcmp(actual->dato, palabra) == 0)
         {
             //printf("Encontre %s == %s\n",actual->dato,palabra);
             return 1;
@@ -54,7 +55,7 @@ void totalDeIdentificadores(Lista *lista)
         actual=actual->siguiente;
         cantidad++;
     }
-    printf("Cantidad de identificadores : %d ...\n",cantidad);
+    printf("Cantidad de identificadores : %d ...\n", cantidad);
 }
 
 void recorrer(Lista *lista)
@@ -62,7 +63,7 @@ void recorrer(Lista *lista)
     Lista actual = *lista;
     while(actual!=NULL)
     {
-        printf("Dato del nodo: %s\n",actual->dato);
+        printf("-\"%s\" de tipo: \"%s\"\n", actual->dato, actual->tipoDato);
         actual=actual->siguiente;
     }
 }
@@ -100,16 +101,16 @@ void control(int tipoA, char operacion, int tipoB)
     switch(operacion)
     {
     case '+':
-        comparar(tipoA, tipoB, "sumar");
+        comparar(tipoA, tipoB, "suma");
         break;
     case '-':
-        comparar(tipoA, tipoB, "restar");
+        comparar(tipoA, tipoB, "resta");
         break;
     case '*':
-        comparar(tipoA, tipoB, "multiplicar");
+        comparar(tipoA, tipoB, "multiplicion");
         break;
     case '/':
-       comparar(tipoA, tipoB, "dividir");
+       comparar(tipoA, tipoB, "divicion");
         break;
     }
 
@@ -117,21 +118,14 @@ void control(int tipoA, char operacion, int tipoB)
 
 void comparar(int tipoA, int tipoB, char *operacion)
 {
-     if((tipoA == CARACTER && tipoB == CARACTER) || (tipoA == NUMERO && tipoB == NUMERO) || (tipoA == NUMERO && tipoB == CARACTER) || (tipoA == CARACTER && tipoB == NUMERO) )
-        {
-            printf("bien\n");
+        if(tipoA == CADENA){
+            printf("No se puede realizar una %s con un string\n", operacion);
         }
-        else if((tipoA == CARACTER && tipoB == CADENA) || (tipoA == CADENA && tipoB == CARACTER))
-        {
-            printf("Error, no se puede %s un caracter con un string\n", operacion);
+        else if(tipoB == CADENA){
+            printf("No se puede realizar una %s con un string\n", operacion);
         }
-        else if((tipoA == NUMERO && tipoB == CADENA) || (tipoA == CADENA && tipoB == NUMERO))
-        {
-            printf("Error, no se puede %s un numero con un string\n", operacion);
-        }
-        else
-        {
-            printf("No se pueden %s strings\n", operacion);
+        else{
+            printf("Bien\n");
         }
 }
 
@@ -141,7 +135,38 @@ void comparar(int tipoA, int tipoB, char *operacion)
 
 
 
-void mostrarTodo()
+void informeDeLectura(Lista *listaid, Lista *listaDeFunciones, Lista *listaErrores)
 {
-    printf("\n\njejeje todo\n\n");
+    identificadores(listaid);
+    funciones(listaDeFunciones);
+    errores(listaErrores);
+}
+
+
+void identificadores(Lista *listaid)
+{
+
+    printf("\n\n------------------------------Lista de IDENTIFICADORES declarados------------------------------\n\n");
+    recorrer(listaid);
+}
+
+
+void funciones(Lista *listaFunciones)
+{
+
+    printf("\n\n------------------------------Lista de FUNCIONES declaradas------------------------------\n\n");
+
+    Lista actual = *listaFunciones;
+    while(actual!=NULL)
+    {
+        printf("-\"%s\" devuelve un valor de tipo \"%s\"\n", actual->dato, actual->tipoDato);
+        actual=actual->siguiente;
+    }
+
+}
+
+
+void errores(Lista *listaErrores)
+{
+
 }

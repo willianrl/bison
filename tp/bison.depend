@@ -1,13 +1,13 @@
 # depslib dependency file v1.0
-1572108685 source:c:\users\usuario\desktop\tp integrador sintaxys\bison\tp\funcionesdelista.c
+1572240674 source:c:\users\usuario\desktop\tp integrador sintaxys\bison\tp\funcionesdelista.c
 	"funcionesDeLista.h"
 
-1572108835 c:\users\usuario\desktop\tp integrador sintaxys\bison\tp\funcionesdelista.h
+1572238673 c:\users\usuario\desktop\tp integrador sintaxys\bison\tp\funcionesdelista.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
 
-1572110795 source:c:\users\usuario\desktop\tp integrador sintaxys\bison\tp\lex.yy.c
+1572291897 source:c:\users\usuario\desktop\tp integrador sintaxys\bison\tp\lex.yy.c
 	<stdio.h>
 	<stdlib.h>
 	<unistd.h>
@@ -18,11 +18,12 @@
 	<stdlib.h>
 	<stdlib.h>
 
-1572111199 c:\users\usuario\desktop\tp integrador sintaxys\bison\tp\tp4correccion.tab.h
+1572299445 c:\users\usuario\desktop\tp integrador sintaxys\bison\tp\tp4correccion.tab.h
 
-1572111199 source:c:\users\usuario\desktop\tp integrador sintaxys\bison\tp\tp4correccion.tab.c
+1572299373 source:c:\users\usuario\desktop\tp integrador sintaxys\bison\tp\tp4correccion.tab.c
 	<stdio.h>
 	<stdlib.h>
+	<string.h>
 	"funcionesDeLista.h"
 	<stddef.h>
 	<libintl.h>
@@ -31,4 +32,12 @@
 	<stdlib.h>
 	<stdlib.h>
 	<stdio.h>
+
+1572237876 source:c:\users\usuario\desktop\tp integrador sintaxys\bison\tp\funcionesdecola.c
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+	"funcionesDeCola.h"
+
+1572237893 c:\users\usuario\desktop\tp integrador sintaxys\bison\tp\funcionesdecola.h
 

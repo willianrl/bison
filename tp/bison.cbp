@@ -15,8 +15,8 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add library="../../../../GnuWin32/lib/libfl.a" />
-					<Add library="../../../../GnuWin32/lib/liby.a" />
+					<Add library="../../../../../../GnuWin32/lib/libfl.a" />
+					<Add library="../../../../../../GnuWin32/lib/liby.a" />
 				</Linker>
 			</Target>
 		</Build>
