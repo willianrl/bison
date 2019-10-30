@@ -9,7 +9,9 @@
 extern FILE *yyin;
 extern int yylineno;
 
-Lista listaIdentificador = NULL,lista = NULL, listaDeFunciones = NULL;
+Lista listaIdentificador = NULL,lista = NULL;
+
+Funciones listaFunciones = NULL;
 
 int flag_error = 0,
     flag_SentDeclaraciones = 0,
@@ -26,7 +28,8 @@ int flag_error = 0,
     flag_bucles = 0;
 
 char *funcion;
-char tipoDato[20] = "hola";
+char tipoDato[20];
+int funcionRepetida = 0;
 
 %}
 
@@ -43,6 +46,9 @@ struct{
 %token <s> IDENTIFICADOR
 %token <s> NUM
 %token <s> CCARACTER
+%token <s> HEXA
+%token <s> OCTAL
+%token <s> REAL
 %token <s> LITERALESCADENA
 
 %token <s> TIPODATO
@@ -91,6 +97,8 @@ line
         | sentencia '\n'                          { flag_general=0; flag_error=0;                         printf("\n----------------------------------------------------------------------------------\n"); }
         | error '\n'                              { flag_error=0; printf("No se reconocio la entrada\n"); printf("\n----------------------------------------------------------------------------------\n"); }
         ;
+
+
 
 
 
@@ -270,7 +278,7 @@ expOP
 
 sentenciaDeclaracion 
                       : TIPODATO listaDeIdentificadores { if(flag_datos == 0){ strcpy(tipoDato, $<s.cadena>1); printf("Varibles de tipo \"%s\"\n", tipoDato); } } finalizador { if(flag_datos==1){flag_datos = 0; flag_SentDeclaraciones = 1;}}
-                      | error finalizador 																	{ printf("Falto el TIPO DE DATO\n"); flag_datos = 1; }
+                     // | error finalizador 																	{ printf("Falto el TIPO DE DATO\n"); flag_datos = 1; }
                       ;
 
 listaDeIdentificadores 
@@ -299,19 +307,14 @@ finalizador
 
 
 
-
-
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  DECLARACION Y DEFINICION DE FUNCIONES  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-// flag a utilizar   flag_funciones
-
 declaracionyDefinicionDeFunciones 
-                                  : TIPODATO IDENTIFICADOR { printf("\nSe identifico a la funcion \"%s\" de tipo \"%s\"\n", $<s.cadena>2, $<s.cadena>1); insertarNodoALista(&listaDeFunciones, $<s.cadena>2, $<s.cadena>1); } parametros cuerpo { if(flag_funciones == 0){ printf("Se %s correctamente la funcion: \"%s\"\n", funcion, $<s.cadena>2); } else { printf("Se definio/declaro incorrectamente la funcion \"%s\"\n", $<s.cadena>2); flag_funciones = 0; } }
+                                  : TIPODATO IDENTIFICADOR '(' { printf("\nSe identifico a la funcion \"%s\" de tipo \"%s\"\n", $<s.cadena>2, $<s.cadena>1); funcionRepetida = buscarFuncion(&listaFunciones, $<s.cadena>2); insertarFuncionSinRepetir(&listaFunciones, $<s.cadena>1, $<s.cadena>2); } parametros cuerpo { if(flag_funciones == 0){ printf("Se %s correctamente la funcion: \"%s\"\n", funcion, $<s.cadena>2); } else { printf("Se definio/declaro incorrectamente la funcion \"%s\"\n", $<s.cadena>2); flag_funciones = 0; funcionRepetida = 0;} }
                                   | error '(' ')' cuerpo { printf("Se definio/declaro incorrectamente la funcion\n"); flag_funciones = 0; }
                                   ;
 
 parametros 
-            : '(' listaDeParametros ')'  { if(flag_funciones == 0){ printf("Se declararon los parametros de la funcion correctamente\n"); } else{ printf("Se declararon incorrectamente los parametros de la funcion\n"); } }
-            | '(' ')'                    { if(flag_funciones == 0){ printf("No se declararon parametros para la funcion\n"); } }
+            :  listaDeParametros  ')'  { if(flag_funciones == 0){ printf("Se declararon los parametros de la funcion correctamente\n"); } else{ printf("Se declararon incorrectamente los parametros de la funcion\n"); } }
+            |   ')'                    { if(flag_funciones == 0){ printf("No se declararon parametros para la funcion\n"); } }
             ;
 
 listaDeParametros 
@@ -320,9 +323,9 @@ listaDeParametros
                   ;
 
 parametro 
-          : TIPODATO IDENTIFICADOR
-          | TIPODATO
-          | error                      { flag_funciones = 1; }
+          : TIPODATO IDENTIFICADOR     { if(funcionRepetida == 0){ agregarParametros(&(*listaFunciones).parametros, $<s.cadena>1); } }
+          | TIPODATO                   { if(funcionRepetida == 0){ agregarParametros(&(*listaFunciones).parametros, $<s.cadena>1); }  }
+          | error                      {  if(flag_funciones == 0) { printf("Valor no reconocido para asignar \n"); } flag_funciones = 1; }
           ;
 
 cuerpo
@@ -330,6 +333,12 @@ cuerpo
         | sentCompuesta                 { if(flag_general == 1){flag_general = 0; flag_funciones = 1; }; funcion = "definio"; }
         | error                         { printf("Se esperaba un punto y como o una sentencia compuesta\n"); flag_funciones = 1; }
         ;
+
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  DECLARACION Y DEFINICION DE FUNCIONES  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// flag a utilizar   flag_funciones
+
+
 
 
 opcionSalto
@@ -340,9 +349,11 @@ opcionSalto
 
 %%
 
-int main(){
-  //yydebug = 1;
-  //yyin = fopen("gramatica.txt", "r");
-  yyparse();
-	informeDeLectura(&listaIdentificador, &listaDeFunciones, &lista);
+int main()
+{      
+    //yydebug = 1;
+    yyin = fopen("gramatica.txt", "r");
+    yyparse();
+
+    informeDeLectura(&listaIdentificador, &listaFunciones, &lista);
 }
