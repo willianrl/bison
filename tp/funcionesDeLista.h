@@ -2,16 +2,23 @@
 #include<string.h>
 #include<stdlib.h>
 
-typedef struct Nodo
-{
-	char tipoDato[10];
-	char dato[30];
+//////////////////////////////estructura para las variables//////////////////////////////////////////
+typedef struct Nodo{
+	char identificador[30];
 	struct Nodo *siguiente;
-} tipoNodo;
+}IDENTIFICADORES;
 
-typedef tipoNodo *Lista;
+typedef IDENTIFICADORES *Identificadores;
 
-//////////////////////////////Cosas para funciones//////////////////////////////////////////
+typedef struct NodO{
+	char tipoDato[10];
+	char identificador[30];
+	struct NodO *siguiente;
+}VARIABLES;
+
+typedef VARIABLES *Variables;
+
+//////////////////////////////estructura para las funciones//////////////////////////////////////////
 
 typedef struct nodo{
 	char tipoDato[10];
@@ -29,28 +36,58 @@ typedef struct NODO{
 
 typedef FUNCIONES *Funciones;
 
+//////////////////////////////estructura para las funciones//////////////////////////////////////////
+
+typedef struct NoDO{
+	char tipoDatoA[10];
+	char identificadorA[20];
+	char tipoDatoB[10];
+	char identificadorB[20];
+	struct NoDO *siguiente;
+}ERRORESSEMANTICOS;
+
+typedef ERRORESSEMANTICOS *Semanticos;
+
+////////////////////////////////Para las Variables//////////////////////////////////////////
 
 
-void ingresarSinRepetir(Lista *, char *,char * , int);
-void insertarNodoALista(Lista *, char *,char * );
-int encontrarPalabra(Lista *, char *);
-void totalDeIdentificadores(Lista *);
-void recorrer(Lista *);
-void verificarSiPuede(Lista *);
+void insertarIdentificador(Identificadores *, char *);
+void insertarVariable(Semanticos *, Variables *, Identificadores *, char *);
+int esVariableNueva(Semanticos *, Variables *, char *, char *);
+//void insertarVariableSinRepetir(Variables *, char *);
+//int encontrarPalabra(Variables *, char *);
+//void insertarVariable(Variables *, char *)
 
-void control(int, char, int );
-void comparar(int, int, char*);
-
-void informeDeLectura(Lista *, Funciones *, Lista *);
+void imprimirVariables(Variables *);
 
 
+//void recorrer(Lista *);
+//void verificarSiPuede(Lista *);
 
-//////////////////////////////////////////////////Funciones para mostrar funciones y sus parametros ///////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////Para las Funciones///////////////////////////////////////////////////////////////////////////
+
+
 
 void insertarFuncionSinRepetir(Funciones *, char *, char *);
-
+int buscarFuncion(Funciones *, char *);
 void insertarFuncion(Funciones *, char *, char *);
 void agregarParametros(Parametros *, char *);
 
 void imprimirFunciones(Funciones *);
-int buscarFuncion(Funciones *, char *);
+
+///////////////////////////////////////Para los Errores Semanticos///////////////////////////////////////////////////////////////
+
+
+void dobleDeclaracion(Semanticos *, char *,char*,char*,char* );
+void imprimirDobleDeclaracion(Semanticos *);
+void control(int, char, int );
+
+void comparar(int, int, char*);
+
+
+/////////////////////////////////////////Para Mostrar Todo al Final del .L///////////////////
+
+
+void informeDeLectura(Variables *, Funciones *, Semanticos *);

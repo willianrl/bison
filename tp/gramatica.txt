@@ -1,8 +1,12 @@
-int suma(int a,  int b);
-
-int resta(int c, char d);
-
-int suma(int g, float y);
-
-
+int juan;
+int sumar(int,int);
+int restar(char,char);
+int multiplicar(char);
+int eric;
+int piter;
+char eric;
+int a,b,c;
+char g;
+int b;
+char c;
 

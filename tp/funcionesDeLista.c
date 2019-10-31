@@ -3,7 +3,74 @@
 #define CADENA 2
 #define NUMERO 3
 
+//==================  Funciones para las declaraciones de variables ======================================
 
+void insertarIdentificador(Identificadores *lista, char *identifica)
+{
+    Identificadores nuevo_nodo = (Identificadores)malloc(sizeof(IDENTIFICADORES));
+
+    strcpy(nuevo_nodo->identificador, identifica);
+
+    nuevo_nodo->siguiente = *lista;
+	*lista = nuevo_nodo;
+}
+
+void insertarVariable(Semanticos *error, Variables *listaV, Identificadores *listaI, char *tipo)
+{
+    Identificadores actual;
+    while(*listaI != NULL)
+    {
+        actual = *listaI;
+        if(esVariableNueva(error, listaV, actual->identificador, tipo))
+        {
+            Variables nuevo_nodo = (Variables)malloc(sizeof(VARIABLES));
+
+            strcpy(nuevo_nodo->tipoDato, tipo);
+            strcpy(nuevo_nodo->identificador, actual->identificador);
+            printf("\n se creo la variable %s de tipo %s  \n",nuevo_nodo->identificador,nuevo_nodo->tipoDato);
+
+            nuevo_nodo->siguiente = *listaV;
+            *listaV = nuevo_nodo;
+            *listaI = actual->siguiente;
+            free(actual);/* liberamos la memoria */
+
+        }
+        else{
+            *listaI = actual->siguiente;
+            free(actual);/* liberamos la memoria */
+        }
+    }
+}
+
+int esVariableNueva(Semanticos *errores, Variables *lista, char *identifi, char *tipo)
+{
+    Variables actual = *lista;
+    while(actual != NULL)
+    {
+        if(strcmp(actual->identificador,identifi)==0)
+        {
+            dobleDeclaracion(errores, actual->tipoDato, actual->identificador , tipo, identifi );
+
+            return 0;
+        }
+        actual = actual->siguiente;
+    }
+    return 1;
+}
+
+void imprimirVariables(Variables *lista)
+{
+	Variables actual = *lista;
+	printf("\n\n------------------------------Lista de VARIABLES declaradas------------------------------\n\n");
+
+    while(actual != NULL)
+    {
+        printf("\"%s\"   \"%s\"\n", actual->tipoDato, actual->identificador);
+        actual = actual->siguiente;
+    }
+
+}
+/*
 void ingresarSinRepetir(Lista *lista, char *palabra, char *tipoDato, int lugar)
 {
     //printf("se va ha insertar la palabara %s y esta asociado a la posicion %d \n",palabra,posicion);
@@ -96,6 +163,157 @@ void verificarSiPuede(Lista *lista)
     }
 }
 
+
+
+
+
+
+
+
+void identificadores(Lista *listaid)
+{
+
+    printf("\n\n------------------------------Lista de IDENTIFICADORES declarados------------------------------\n\n");
+    recorrer(listaid);
+}
+
+
+
+
+
+void errores(Lista *listaErrores)
+{
+
+}
+
+*/
+
+//////////////////////////////////////////////////Funciones para mostrar funciones y sus parametros ///////////////////////////////////////////////////////////////////////////
+
+void insertarFuncionSinRepetir(Funciones *lista, char *tipo, char *nombre)
+{
+    if(buscarFuncion(lista,nombre) != 1)
+        insertarFuncion(lista,tipo,nombre);
+}
+
+int buscarFuncion(Funciones *lista, char *nombre)
+{
+    Funciones aux1 = *lista;
+
+    while(aux1!=NULL)
+    {
+        if(strcmp(aux1->nombreFuncion, nombre)==0)
+        {
+        	return 1;
+        }
+        aux1 = aux1->sig;
+    }
+    return 0;
+}
+
+
+void insertarFuncion(Funciones *lista, char *tipo, char *nombre)
+{
+    Funciones nuevo_nodo = (Funciones)malloc(sizeof(FUNCIONES));
+
+    strcpy(nuevo_nodo->tipoDato, tipo);
+    strcpy(nuevo_nodo->nombreFuncion, nombre);
+    nuevo_nodo->parametros = NULL;
+
+    nuevo_nodo -> sig = *lista;
+	*lista = nuevo_nodo;
+
+}
+
+void agregarParametros(Parametros *lista, char *tipo)
+{
+	Parametros nuevo_nodo = (Parametros)malloc(sizeof(PARAMETROS));
+    strcpy(nuevo_nodo->tipoDato, tipo);
+    nuevo_nodo -> sig = NULL;
+
+    Parametros aux1 = *lista;
+    Parametros aux2;
+
+    while(aux1 != NULL)
+    {
+        aux2 = aux1;
+        aux1 = aux1->sig;
+    }
+    if( *lista == aux1)
+    {
+        *lista = nuevo_nodo;
+    }
+    else
+    {
+        aux2->sig = nuevo_nodo;
+    }
+    nuevo_nodo->sig = aux1;
+
+}
+
+void imprimirFunciones(Funciones *lista)
+{
+	Funciones aux1 = *lista;
+	Parametros aux2 = (*lista)->parametros;
+
+     printf("\n\n------------------------------Lista de FUNCIONES declaradas------------------------------\n\n");
+
+	while(aux1 != NULL)
+	{
+		printf(" funcion \"%s\" devuelve un \"%s\"\n", aux1->nombreFuncion, aux1->tipoDato);
+
+		if(aux2 != NULL)
+		{
+			printf("Recibe parametros del tipo: ");
+		}
+        else{
+            printf("La funcion no recibe ningun parametro.\n");
+        }
+
+		while(aux2 != NULL)
+		{
+			printf("%s, ", aux2->tipoDato);
+			aux2 = aux2 -> sig;
+		}
+		printf("\n\n");
+
+		aux1 = aux1->sig;
+		if(aux1 != NULL)
+        {
+            aux2 = aux1->parametros;
+        }
+
+	}
+
+}
+
+// ====================  Para los errores semanticos ====================================
+
+void dobleDeclaracion(Semanticos *errores, char *tipoA, char *identifiA ,char *tipoB, char *identifiB )
+{
+    Semanticos nuevo_nodo = (Semanticos)malloc(sizeof(ERRORESSEMANTICOS));
+
+    strcpy(nuevo_nodo->tipoDatoA, tipoA);
+    strcpy(nuevo_nodo->identificadorA, identifiA);
+    strcpy(nuevo_nodo->tipoDatoB, tipoB);
+    strcpy(nuevo_nodo->identificadorB, identifiB);
+
+    nuevo_nodo -> siguiente = *errores;
+	*errores = nuevo_nodo;
+
+}
+
+void imprimirDobleDeclaracion(Semanticos *lista)
+{
+    Semanticos actual = *lista;
+    printf("\n\n------------------------------errores Semanticos------------------------------\n\n");
+    while(actual!=NULL)
+    {
+        printf("doble declaracion (antes) %s %s (ahora) %s %s  \n",actual->tipoDatoA,actual->identificadorA,actual->tipoDatoB,actual->identificadorB);
+        actual=actual->siguiente;
+    }
+}
+
 void control(int tipoA, char operacion, int tipoB)
 {
     switch(operacion)
@@ -116,6 +334,8 @@ void control(int tipoA, char operacion, int tipoB)
 
 }
 
+
+
 void comparar(int tipoA, int tipoB, char *operacion)
 {
         if(tipoA == CADENA){
@@ -129,129 +349,13 @@ void comparar(int tipoA, int tipoB, char *operacion)
         }
 }
 
+// ================== al final de todo la funcion encargada de mostrar todo ======================
 
 
-
-
-
-
-void informeDeLectura(Lista *listaid, Funciones *listaDeFunciones, Lista *listaErrores)
+void informeDeLectura(Variables *listaV,Funciones *listaF, Semanticos *listaS)//(Lista *listaid,  Lista *listaErrores)
 {
-    //identificadores(listaid);
-    imprimirFunciones(listaDeFunciones);
-    //errores(listaErrores);
-}
-
-
-void identificadores(Lista *listaid)
-{
-
-    printf("\n\n------------------------------Lista de IDENTIFICADORES declarados------------------------------\n\n");
-    recorrer(listaid);
-}
-
-
-
-
-
-void errores(Lista *listaErrores)
-{
-
-}
-
-
-
-//////////////////////////////////////////////////Funciones para mostrar funciones y sus parametros ///////////////////////////////////////////////////////////////////////////
-
-void imprimirFunciones(Funciones *lista)
-{
-	Funciones aux1 = *lista;
-	Parametros aux2 = (*lista)->parametros;
-
-     printf("\n\n------------------------------Lista de FUNCIONES declaradas------------------------------\n\n");
-
-	while(aux1 != NULL)
-	{
-		printf("Se declaro la funcion \"%s\" que devuelve un valor \"%s\"\n", aux1->nombreFuncion, aux1->tipoDato);
-		
-		if(aux2 != NULL)
-		{	
-			printf("Recibe parametros de tipo: ");	
-		}
-        else{
-            printf("La funcion no recibe ningun parametro.\n")
-        } 
-	
-		while(aux2 != NULL)
-		{
-			printf("%s, ", aux2->tipoDato);
-			aux2 = aux2 -> sig;
-		}
-		printf("\n\n");
-		
-		aux1 = aux1->sig;
-		aux2 = aux1->parametros;
-	}
-	
-}
-
-void insertarFuncion(Funciones *lista, char *tipo, char *nombre)
-{
-    Funciones nuevo_nodo = (Funciones)malloc(sizeof(FUNCIONES));
-
-    strcpy(nuevo_nodo->tipoDato, tipo);
-    strcpy(nuevo_nodo->nombreFuncion, nombre);
-    nuevo_nodo->parametros = NULL;
-    
-    nuevo_nodo -> sig = *lista;
-	*lista = nuevo_nodo;		
-	
-}
-
-int buscarFuncion(Funciones *lista, char *nombre)
-{
-    Funciones aux1 = *lista;
-
-    while(aux1!=NULL)
-    {
-        if(strcmp(aux1->nombreFuncion, nombre)==0)
-        {
-        	return 1;
-        }
-        aux1 = aux1->sig;
-    }
-    return 0;
-}
-
-void insertarFuncionSinRepetir(Funciones *lista, char *tipo, char *nombre)
-{
-    if(buscarFuncion(lista,nombre) != 1)
-        insertarFuncion(lista,tipo,nombre);
-}
-
-void agregarParametros(Parametros *lista, char *tipo)
-{
-	Parametros nuevo_nodo = (Parametros)malloc(sizeof(PARAMETROS));
-    strcpy(nuevo_nodo->tipoDato, tipo);
-    nuevo_nodo -> sig = NULL;
-
-    Parametros aux1 = *lista;
-    Parametros aux2;
-    
-    while(aux1 != NULL)
-    {
-        aux2 = aux1;
-        aux1 = aux1->sig;
-    }
-    if( *lista == aux1)
-    {
-        *lista = nuevo_nodo;
-    }
-    else
-    {
-        aux2->sig = nuevo_nodo;
-    }
-    nuevo_nodo->sig = aux1;
-    
+    imprimirVariables(listaV);
+    imprimirFunciones(listaF);
+    imprimirDobleDeclaracion(listaS);
 }
 

@@ -9,9 +9,12 @@
 extern FILE *yyin;
 extern int yylineno;
 
-Lista listaIdentificador = NULL,lista = NULL;
+Variables listaDeVariables = NULL;
+Identificadores listaDeIdentificadores = NULL;
 
 Funciones listaFunciones = NULL;
+
+Semanticos erroresSemanticos = NULL;
 
 int flag_error = 0,
     flag_SentDeclaraciones = 0,
@@ -104,7 +107,7 @@ line
 
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   EXPRESIONES  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-// flag_expresion
+// flag_expresion listaidentificador
 
 
 expresion 
@@ -260,7 +263,7 @@ sentIteracion
                 ;
 
 expOrDeclaracion
-                  : TIPODATO IDENTIFICADOR '=' expresion    { if(flag_expresion == 1){ printf("Un parametro no fue reconocido en la \"SENTENCIA DE ITERRACION\"\n"); flag_bucles = 1; flag_expresion = 0; ingresarSinRepetir(&listaIdentificador, $<s.cadena>2,$<s.cadena>1, 2); } }
+                  : TIPODATO IDENTIFICADOR '=' expresion    { if(flag_expresion == 1){ printf("Un parametro no fue reconocido en la \"SENTENCIA DE ITERRACION\"\n"); flag_bucles = 1; flag_expresion = 0; /*ingresarSinRepetir(&listaDeIdentificadores, $<s.cadena>2,$<s.cadena>1, 2);*/ } }
                   | expOP
                   | error                                   { if(flag_bucles == 0 && flag_bucles == 0){ printf("Un parametro no fue reconocido en la \"SENTENCIA DE ITERRACION\"\n"); flag_bucles = 1; } }
                   ;
@@ -277,7 +280,7 @@ expOP
 // flag_SentDeclaraciones
 
 sentenciaDeclaracion 
-                      : TIPODATO listaDeIdentificadores { if(flag_datos == 0){ strcpy(tipoDato, $<s.cadena>1); printf("Varibles de tipo \"%s\"\n", tipoDato); } } finalizador { if(flag_datos==1){flag_datos = 0; flag_SentDeclaraciones = 1;}}
+                      : TIPODATO listaDeIdentificadores { if(flag_datos == 0){ strcpy(tipoDato, $<s.cadena>1); printf("Varibles de tipo \"%s\"\n", tipoDato); } } finalizador { if(flag_datos==1){flag_datos = 0; flag_SentDeclaraciones = 1;}} { insertarVariable(&erroresSemanticos, &listaDeVariables, &listaDeIdentificadores, $<s.cadena>1); }
                      // | error finalizador 																	{ printf("Falto el TIPO DE DATO\n"); flag_datos = 1; }
                       ;
 
@@ -287,8 +290,8 @@ listaDeIdentificadores
                         ;
 
 identificadoryAsignacion
-                          : IDENTIFICADOR opcional                    											{ if(flag_datos == 0){ ingresarSinRepetir(&listaIdentificador, $<s.cadena>1, tipoDato, 1); } }
-                          | IDENTIFICADOR opcional '=' expresion         										{ if(flag_datos == 0){ ingresarSinRepetir(&listaIdentificador, $<s.cadena>1, tipoDato, 2); } }
+                          : IDENTIFICADOR opcional                    											{ if(flag_datos == 0){ insertarIdentificador(&listaDeIdentificadores, $<s.cadena>1); } }
+                          | IDENTIFICADOR opcional '=' expresion         										{ if(flag_datos == 0){ insertarIdentificador(&listaDeIdentificadores, $<s.cadena>1); } }
 						              | NUM opcional 																										{ printf(" error LValue \n"); flag_datos = 1;}
                           | error                                     											{ if(flag_datos == 0){ printf("Falta IDENTIFICADOR\n"); flag_datos = 1;} }
                           ;
@@ -301,11 +304,11 @@ opcional
           ;
 
 finalizador
-            : ';'
-            | error 																															{ if(flag_datos == 0){ printf("Falto el caracter de corte\n"); flag_datos = 1;} }
+            : ';' 																								
+            | error 																							{ if(flag_datos == 0){ printf("Falto el caracter de corte\n"); flag_datos = 1;} }
             ;
 
-
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 declaracionyDefinicionDeFunciones 
                                   : TIPODATO IDENTIFICADOR '(' { printf("\nSe identifico a la funcion \"%s\" de tipo \"%s\"\n", $<s.cadena>2, $<s.cadena>1); funcionRepetida = buscarFuncion(&listaFunciones, $<s.cadena>2); insertarFuncionSinRepetir(&listaFunciones, $<s.cadena>1, $<s.cadena>2); } parametros cuerpo { if(flag_funciones == 0){ printf("Se %s correctamente la funcion: \"%s\"\n", funcion, $<s.cadena>2); } else { printf("Se definio/declaro incorrectamente la funcion \"%s\"\n", $<s.cadena>2); flag_funciones = 0; funcionRepetida = 0;} }
@@ -355,5 +358,6 @@ int main()
     yyin = fopen("gramatica.txt", "r");
     yyparse();
 
-    informeDeLectura(&listaIdentificador, &listaFunciones, &lista);
+    informeDeLectura(&listaDeVariables, &listaFunciones, &erroresSemanticos);
+	printf("\n\n\nfin\n\n");
 }
