@@ -6,7 +6,74 @@
 #define ID 4
 #define FLOAT 5
 
+//==================  Funciones para las declaraciones de variables ======================================
 
+void insertarIdentificador(Identificadores *lista, char *identifica)
+{
+    Identificadores nuevo_nodo = (Identificadores)malloc(sizeof(IDENTIFICADORES));
+
+    strcpy(nuevo_nodo->identificador, identifica);
+
+    nuevo_nodo->siguiente = *lista;
+	*lista = nuevo_nodo;
+}
+
+void insertarVariable(Semanticos *error, Variables *listaV, Identificadores *listaI, char *tipo)
+{
+    Identificadores actual;
+    while(*listaI != NULL)
+    {
+        actual = *listaI;
+        if(esVariableNueva(error, listaV, actual->identificador, tipo))
+        {
+            Variables nuevo_nodo = (Variables)malloc(sizeof(VARIABLES));
+
+            strcpy(nuevo_nodo->tipoDato, tipo);
+            strcpy(nuevo_nodo->identificador, actual->identificador);
+            printf("\n se creo la variable %s de tipo %s  \n",nuevo_nodo->identificador,nuevo_nodo->tipoDato);
+
+            nuevo_nodo->siguiente = *listaV;
+            *listaV = nuevo_nodo;
+            *listaI = actual->siguiente;
+            free(actual);/* liberamos la memoria */
+
+        }
+        else{
+            *listaI = actual->siguiente;
+            free(actual);/* liberamos la memoria */
+        }
+    }
+}
+
+int esVariableNueva(Semanticos *errores, Variables *lista, char *identifi, char *tipo)
+{
+    Variables actual = *lista;
+    while(actual != NULL)
+    {
+        if(strcmp(actual->identificador,identifi)==0)
+        {
+            dobleDeclaracion(errores, actual->tipoDato, actual->identificador , tipo, identifi );
+
+            return 0;
+        }
+        actual = actual->siguiente;
+    }
+    return 1;
+}
+
+void imprimirVariables(Variables *lista)
+{
+	Variables actual = *lista;
+	printf("\n\n------------------------------Lista de VARIABLES declaradas------------------------------\n\n");
+
+    while(actual != NULL)
+    {
+        printf("\"%s\"   \"%s\"\n", actual->tipoDato, actual->identificador);
+        actual = actual->siguiente;
+    }
+
+}
+/*
 void ingresarSinRepetir(Lista *lista, char *palabra, char *tipoDato, int lugar)
 {
     //printf("se va ha insertar la palabara %s y esta asociado a la posicion %d \n",palabra,posicion);
@@ -99,6 +166,7 @@ void verificarSiPuede(Lista *lista)
     }
 }
 
+<<<<<<< HEAD
 
 void informeDeLectura(Lista *listaid, Funciones *listaDeFunciones, Lista *listaErrores)
 {
@@ -107,6 +175,14 @@ void informeDeLectura(Lista *listaid, Funciones *listaDeFunciones, Lista *listaE
     //errores(listaErrores);
 }
 
+=======
+
+
+
+
+
+
+>>>>>>> 7c595378d79f1267335122c72d284c5ddcde1dbe
 
 void identificadores(Lista *listaid)
 {
@@ -129,10 +205,11 @@ void errores(Lista *listaErrores)
 
 }
 
-
+*/
 
 //////////////////////////////////////////////////Funciones para mostrar funciones y sus parametros ///////////////////////////////////////////////////////////////////////////
 
+<<<<<<< HEAD
 void imprimirFunciones(Funciones *lista)
 {
 	Funciones aux1 = *lista;
@@ -187,6 +264,12 @@ void insertarFuncion(Funciones *lista, char *tipo, char *nombre)
     nuevo_nodo -> sig = *lista;
 	*lista = nuevo_nodo;
 
+=======
+void insertarFuncionSinRepetir(Funciones *lista, char *tipo, char *nombre)
+{
+    if(buscarFuncion(lista,nombre) != 1)
+        insertarFuncion(lista,tipo,nombre);
+>>>>>>> 7c595378d79f1267335122c72d284c5ddcde1dbe
 }
 
 int buscarFuncion(Funciones *lista, char *nombre)
@@ -204,10 +287,18 @@ int buscarFuncion(Funciones *lista, char *nombre)
     return 0;
 }
 
-void insertarFuncionSinRepetir(Funciones *lista, char *tipo, char *nombre)
+
+void insertarFuncion(Funciones *lista, char *tipo, char *nombre)
 {
-    if(buscarFuncion(lista,nombre) != 1)
-        insertarFuncion(lista,tipo,nombre);
+    Funciones nuevo_nodo = (Funciones)malloc(sizeof(FUNCIONES));
+
+    strcpy(nuevo_nodo->tipoDato, tipo);
+    strcpy(nuevo_nodo->nombreFuncion, nombre);
+    nuevo_nodo->parametros = NULL;
+
+    nuevo_nodo -> sig = *lista;
+	*lista = nuevo_nodo;
+
 }
 
 void agregarParametros(Parametros *lista, char *tipo)
@@ -236,16 +327,82 @@ void agregarParametros(Parametros *lista, char *tipo)
 
 }
 
+<<<<<<< HEAD
 
 
 
 /////////////////////////////////////Funcniones para el control de tipos de datos///////////////////////////////////////////////////
+=======
+void imprimirFunciones(Funciones *lista)
+{
+	Funciones aux1 = *lista;
+	Parametros aux2 = (*lista)->parametros;
+
+     printf("\n\n------------------------------Lista de FUNCIONES declaradas------------------------------\n\n");
+
+	while(aux1 != NULL)
+	{
+		printf(" funcion \"%s\" devuelve un \"%s\"\n", aux1->nombreFuncion, aux1->tipoDato);
+
+		if(aux2 != NULL)
+		{
+			printf("Recibe parametros del tipo: ");
+		}
+        else{
+            printf("La funcion no recibe ningun parametro.\n");
+        }
+
+		while(aux2 != NULL)
+		{
+			printf("%s, ", aux2->tipoDato);
+			aux2 = aux2 -> sig;
+		}
+		printf("\n\n");
+
+		aux1 = aux1->sig;
+		if(aux1 != NULL)
+        {
+            aux2 = aux1->parametros;
+        }
+
+	}
+
+}
+
+// ====================  Para los errores semanticos ====================================
+
+void dobleDeclaracion(Semanticos *errores, char *tipoA, char *identifiA ,char *tipoB, char *identifiB )
+{
+    Semanticos nuevo_nodo = (Semanticos)malloc(sizeof(ERRORESSEMANTICOS));
+
+    strcpy(nuevo_nodo->tipoDatoA, tipoA);
+    strcpy(nuevo_nodo->identificadorA, identifiA);
+    strcpy(nuevo_nodo->tipoDatoB, tipoB);
+    strcpy(nuevo_nodo->identificadorB, identifiB);
+
+    nuevo_nodo -> siguiente = *errores;
+	*errores = nuevo_nodo;
+
+}
+
+void imprimirDobleDeclaracion(Semanticos *lista)
+{
+    Semanticos actual = *lista;
+    printf("\n\n------------------------------errores Semanticos------------------------------\n\n");
+    while(actual!=NULL)
+    {
+        printf("doble declaracion (antes) %s %s (ahora) %s %s  \n",actual->tipoDatoA,actual->identificadorA,actual->tipoDatoB,actual->identificadorB);
+        actual=actual->siguiente;
+    }
+}
+>>>>>>> 7c595378d79f1267335122c72d284c5ddcde1dbe
 
 void control(int tipoA, char operacion, int tipoB)
 {
     switch(operacion)
     {
     case '+':
+<<<<<<< HEAD
         compararTipos(tipoA, tipoB);
         break;
     case '-':
@@ -256,11 +413,24 @@ void control(int tipoA, char operacion, int tipoB)
         break;
     case '/':
        compararTipos(tipoA, tipoB);
+=======
+        comparar(tipoA, tipoB, "suma");
+        break;
+    case '-':
+        comparar(tipoA, tipoB, "resta");
+        break;
+    case '*':
+        comparar(tipoA, tipoB, "multiplicion");
+        break;
+    case '/':
+       comparar(tipoA, tipoB, "divicion");
+>>>>>>> 7c595378d79f1267335122c72d284c5ddcde1dbe
         break;
     }
 
 }
 
+<<<<<<< HEAD
 int compararTipos(int tipoA, int tipoB)
 {
         if( tipoA == CADENA || tipoB == CADENA )
@@ -277,6 +447,31 @@ int compararTipos(int tipoA, int tipoB)
             printf("Bien\n");
             return NUMERO;
         }
+=======
+
+
+void comparar(int tipoA, int tipoB, char *operacion)
+{
+        if(tipoA == CADENA){
+            printf("No se puede realizar una %s con un string\n", operacion);
+        }
+        else if(tipoB == CADENA){
+            printf("No se puede realizar una %s con un string\n", operacion);
+        }
+        else{
+            printf("Bien\n");
+        }
+}
+
+// ================== al final de todo la funcion encargada de mostrar todo ======================
+
+
+void informeDeLectura(Variables *listaV,Funciones *listaF, Semanticos *listaS)//(Lista *listaid,  Lista *listaErrores)
+{
+    imprimirVariables(listaV);
+    imprimirFunciones(listaF);
+    imprimirDobleDeclaracion(listaS);
+>>>>>>> 7c595378d79f1267335122c72d284c5ddcde1dbe
 }
 
 
