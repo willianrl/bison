@@ -38,8 +38,7 @@ void totalDeIdentificadores(Lista *);
 void recorrer(Lista *);
 void verificarSiPuede(Lista *);
 
-void control(int, char, int );
-void comparar(int, int, char*);
+
 
 void informeDeLectura(Lista *, Funciones *, Lista *);
 
@@ -54,3 +53,9 @@ void agregarParametros(Parametros *, char *);
 
 void imprimirFunciones(Funciones *);
 int buscarFuncion(Funciones *, char *);
+
+/////////////////////////////////////////////////Funciones para el control de tipos de datos////////////////////////////////
+
+void control(int, char, int );
+
+int compararTipos(int, int);

@@ -1,7 +1,10 @@
 #include "funcionesDeLista.h"
+#define NOVALIDO 0
 #define CARACTER 1
 #define CADENA 2
 #define NUMERO 3
+#define ID 4
+#define FLOAT 5
 
 
 void ingresarSinRepetir(Lista *lista, char *palabra, char *tipoDato, int lugar)
@@ -96,48 +99,10 @@ void verificarSiPuede(Lista *lista)
     }
 }
 
-void control(int tipoA, char operacion, int tipoB)
-{
-    switch(operacion)
-    {
-    case '+':
-        comparar(tipoA, tipoB, "suma");
-        break;
-    case '-':
-        comparar(tipoA, tipoB, "resta");
-        break;
-    case '*':
-        comparar(tipoA, tipoB, "multiplicion");
-        break;
-    case '/':
-       comparar(tipoA, tipoB, "divicion");
-        break;
-    }
-
-}
-
-void comparar(int tipoA, int tipoB, char *operacion)
-{
-        if(tipoA == CADENA){
-            printf("No se puede realizar una %s con un string\n", operacion);
-        }
-        else if(tipoB == CADENA){
-            printf("No se puede realizar una %s con un string\n", operacion);
-        }
-        else{
-            printf("Bien\n");
-        }
-}
-
-
-
-
-
-
 
 void informeDeLectura(Lista *listaid, Funciones *listaDeFunciones, Lista *listaErrores)
 {
-    //identificadores(listaid);
+    identificadores(listaid);
     imprimirFunciones(listaDeFunciones);
     //errores(listaErrores);
 }
@@ -145,8 +110,13 @@ void informeDeLectura(Lista *listaid, Funciones *listaDeFunciones, Lista *listaE
 
 void identificadores(Lista *listaid)
 {
-
-    printf("\n\n------------------------------Lista de IDENTIFICADORES declarados------------------------------\n\n");
+    if(*listaid != NULL)
+    {
+        printf("\n\n------------------------------Lista de IDENTIFICADORES declarados------------------------------\n\n");
+    }
+    else{
+        printf("No se declararon variables.\n");
+    }
     recorrer(listaid);
 }
 
@@ -172,27 +142,38 @@ void imprimirFunciones(Funciones *lista)
 
 	while(aux1 != NULL)
 	{
-		printf("Se declaro la funcion \"%s\" que devuelve un valor \"%s\"\n", aux1->nombreFuncion, aux1->tipoDato);
-		
+		printf("Se declaro la funcion \"%s\" que devuelve un valor de tipo \"%s\"\n", aux1->nombreFuncion, aux1->tipoDato);
+
 		if(aux2 != NULL)
-		{	
-			printf("Recibe parametros de tipo: ");	
+		{
+			printf("Recibe parametros de tipo: ");
 		}
         else{
-            printf("La funcion no recibe ningun parametro.\n")
-        } 
-	
+            printf("La funcion no recibe ningun parametro.\n");
+        }
+
 		while(aux2 != NULL)
 		{
 			printf("%s, ", aux2->tipoDato);
+
 			aux2 = aux2 -> sig;
+
 		}
 		printf("\n\n");
-		
+
 		aux1 = aux1->sig;
-		aux2 = aux1->parametros;
+
+        if(aux1 !=  NULL)
+        {
+           aux2 = aux1->parametros;
+        }
+        else
+        {
+            break;
+        }
+
 	}
-	
+
 }
 
 void insertarFuncion(Funciones *lista, char *tipo, char *nombre)
@@ -202,10 +183,10 @@ void insertarFuncion(Funciones *lista, char *tipo, char *nombre)
     strcpy(nuevo_nodo->tipoDato, tipo);
     strcpy(nuevo_nodo->nombreFuncion, nombre);
     nuevo_nodo->parametros = NULL;
-    
+
     nuevo_nodo -> sig = *lista;
-	*lista = nuevo_nodo;		
-	
+	*lista = nuevo_nodo;
+
 }
 
 int buscarFuncion(Funciones *lista, char *nombre)
@@ -237,7 +218,7 @@ void agregarParametros(Parametros *lista, char *tipo)
 
     Parametros aux1 = *lista;
     Parametros aux2;
-    
+
     while(aux1 != NULL)
     {
         aux2 = aux1;
@@ -252,6 +233,64 @@ void agregarParametros(Parametros *lista, char *tipo)
         aux2->sig = nuevo_nodo;
     }
     nuevo_nodo->sig = aux1;
-    
+
 }
 
+
+
+
+/////////////////////////////////////Funcniones para el control de tipos de datos///////////////////////////////////////////////////
+
+void control(int tipoA, char operacion, int tipoB)
+{
+    switch(operacion)
+    {
+    case '+':
+        compararTipos(tipoA, tipoB);
+        break;
+    case '-':
+        compararTipos(tipoA, tipoB);
+        break;
+    case '*':
+        compararTipos(tipoA, tipoB);
+        break;
+    case '/':
+       compararTipos(tipoA, tipoB);
+        break;
+    }
+
+}
+
+int compararTipos(int tipoA, int tipoB)
+{
+        if( tipoA == CADENA || tipoB == CADENA )
+        {
+            //printf("No se puede realizar una %s con un string\n", operacion);
+            return NOVALIDO;
+        }
+        else if(tipoA == NOVALIDO || tipoB == NOVALIDO)
+        {
+            return NOVALIDO;
+        }
+        else
+        {
+            printf("Bien\n");
+            return NUMERO;
+        }
+}
+
+
+int buscarTripoVariable(Lista *lista, char variable)
+{
+    Funciones aux1 = *lista;
+
+    while(aux1!=NULL)
+    {
+        if(strcmp(aux1->nombreFuncion, variable)==0)
+        {
+            if(strcmp(aux1->tipoDato, "string") == 0){ return 2;}
+        }
+        aux1 = aux1->sig;
+    }
+    return 3;
+}

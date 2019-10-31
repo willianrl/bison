@@ -38,7 +38,7 @@ struct{
   char cadena[30];
   char caracter;
   int entero;
-  int tipo;
+  int tipo[10];
 }s;
 
 }
@@ -46,9 +46,9 @@ struct{
 %token <s> IDENTIFICADOR
 %token <s> NUM
 %token <s> CCARACTER
-%token <s> HEXA
-%token <s> OCTAL
-%token <s> REAL
+//%token <s> HEXA
+//%token <s> OCTAL
+//%token <s> REAL
 %token <s> LITERALESCADENA
 
 %token <s> TIPODATO
@@ -95,7 +95,7 @@ line
         : '\n'                                    { flag_error=0; }
         | declaracionyDefinicionDeFunciones '\n'  { flag_error=0;                                         printf("\n----------------------------------------------------------------------------------\n"); }
         | sentencia '\n'                          { flag_general=0; flag_error=0;                         printf("\n----------------------------------------------------------------------------------\n"); }
-        | error '\n'                              { flag_error=0; printf("No se reconocio la entrada\n"); printf("\n----------------------------------------------------------------------------------\n"); }
+      // | error '\n'                              { flag_error=0; printf("No se reconocio la entrada\n"); printf("\n----------------------------------------------------------------------------------\n"); }
         ;
 
 
@@ -237,7 +237,7 @@ sentExpresion
 
 sentSeleccion 
               : IF     { printf("\nSe declaro una sentencia \"IF\"\n"); }     '(' expresion ')' {if(flag_expresion==1){flag_expresion=0;flag_if=1;}} sentCompuesta  {if(flag_general==1){flag_if=1;}} estructura  {if(flag_if == 1){ flag_if=0; flag_SentControl=1; }}
-					    | SWITCH { printf("\nSe declaro una sentencia \"SWITCH\"\n"); } '(' expresion ')' {if(flag_expresion==1){flag_expresion=0;flag_if=1;}} sentCompuesta  {if(flag_general==1){flag_if=1;}} {if(flag_if == 1){ flag_if=0; flag_SentControl=1; }}
+							| SWITCH { printf("\nSe declaro una sentencia \"SWITCH\"\n"); } '(' expresion ')' {if(flag_expresion==1){flag_expresion=0;flag_if=1;}} sentCompuesta  {if(flag_general==1){flag_if=1;}} {if(flag_if == 1){ flag_if=0; flag_SentControl=1; }}
               ;
 
 estructura 
@@ -278,7 +278,7 @@ expOP
 
 sentenciaDeclaracion 
                       : TIPODATO listaDeIdentificadores { if(flag_datos == 0){ strcpy(tipoDato, $<s.cadena>1); printf("Varibles de tipo \"%s\"\n", tipoDato); } } finalizador { if(flag_datos==1){flag_datos = 0; flag_SentDeclaraciones = 1;}}
-                     // | error finalizador 																	{ printf("Falto el TIPO DE DATO\n"); flag_datos = 1; }
+                      | error finalizador 																	{ printf("Falto el TIPO DE DATO\n"); flag_datos = 1; }
                       ;
 
 listaDeIdentificadores 
@@ -356,4 +356,5 @@ int main()
     yyparse();
 
     informeDeLectura(&listaIdentificador, &listaFunciones, &lista);
+
 }

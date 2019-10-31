@@ -42,32 +42,29 @@
      IDENTIFICADOR = 258,
      NUM = 259,
      CCARACTER = 260,
-     HEXA = 261,
-     OCTAL = 262,
-     REAL = 263,
-     LITERALESCADENA = 264,
-     TIPODATO = 265,
-     IF = 266,
-     ELSEIF = 267,
-     ELSE = 268,
-     SWITCH = 269,
-     DO = 270,
-     WHILE = 271,
-     FOR = 272,
-     RETURN = 273,
-     OR = 274,
-     AND = 275,
-     INCREMENTO = 276,
-     DECREMENTO = 277,
-     SUMAASIGNACION = 278,
-     RESTAASIGNACION = 279,
-     MULTIASIGNACION = 280,
-     DIVASIGNACION = 281,
-     RESTOASIGNACION = 282,
-     MENORIGUAL = 283,
-     MAYORIGUAL = 284,
-     IGUALDAD = 285,
-     DISTINTO = 286
+     LITERALESCADENA = 261,
+     TIPODATO = 262,
+     IF = 263,
+     ELSEIF = 264,
+     ELSE = 265,
+     SWITCH = 266,
+     DO = 267,
+     WHILE = 268,
+     FOR = 269,
+     RETURN = 270,
+     OR = 271,
+     AND = 272,
+     INCREMENTO = 273,
+     DECREMENTO = 274,
+     SUMAASIGNACION = 275,
+     RESTAASIGNACION = 276,
+     MULTIASIGNACION = 277,
+     DIVASIGNACION = 278,
+     RESTOASIGNACION = 279,
+     MENORIGUAL = 280,
+     MAYORIGUAL = 281,
+     IGUALDAD = 282,
+     DISTINTO = 283
    };
 #endif
 
@@ -84,14 +81,14 @@ struct{
   char cadena[30];
   char caracter;
   int entero;
-  int tipo;
+  int tipo[10];
 }s;
 
 
 
 
 /* Line 1676 of yacc.c  */
-#line 95 "tp4correccion.tab.h"
+#line 92 "tp4correccion.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
