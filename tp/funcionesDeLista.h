@@ -12,6 +12,7 @@ typedef IDENTIFICADORES *Identificadores;
 
 typedef struct NodO{
 	char tipoDato[10];
+	int numeroTipoDato;
 	char identificador[30];
 	struct NodO *siguiente;
 }VARIABLES;
@@ -25,7 +26,7 @@ typedef struct nodo{
 	struct nodo *sig;
 }PARAMETROS;
 
-typedef PARAMETROS * Parametros;
+typedef PARAMETROS *Parametros;
 
 typedef struct NODO{
 	char tipoDato[10];
@@ -36,39 +37,70 @@ typedef struct NODO{
 
 typedef FUNCIONES *Funciones;
 
-//////////////////////////////estructura para las funciones//////////////////////////////////////////
+//////////////////////////////estructura para los errores semanticos//////////////////////////////////////////
+
+typedef struct Nudu{
+    int numTipoDatoA;
+    char operacion[25];
+    int numTipoDatoB;
+		int linea;
+    struct Nudu *siguiente;
+}CONTROLDEDATOS;
+
+typedef CONTROLDEDATOS *ControlDeDatos;
+
+typedef struct Nodu{
+    char identificador[20];
+    int tipo;
+		int linea;
+    struct Nodu *siguiente;
+}LVALUE;
+
+typedef LVALUE *LValue;
+
 
 typedef struct NoDO{
-	char tipoDatoA[10];
 	char identificadorA[20];
-	char tipoDatoB[10];
+	int numTipoDatoA;
 	char identificadorB[20];
+	int numTipoDatoB;
+	int linea;
 	struct NoDO *siguiente;
-}ERRORESSEMANTICOS;
+}DOBLEDECLARACIONES;
 
-typedef ERRORESSEMANTICOS *Semanticos;
+typedef DOBLEDECLARACIONES *DobleDeclaraciones;
 
-<<<<<<< HEAD
 
-=======
+
+////////////////////////////////// estructura para los errores sintacticos /////////////////////////////////////////
+
+typedef struct Nado
+{
+	char mensajeError[200];
+	int linea;
+	struct Nado *siguiente;
+} ERRORESSINTACTICOS;
+
+typedef ERRORESSINTACTICOS *ErroresSintacticos;
+
 ////////////////////////////////Para las Variables//////////////////////////////////////////
->>>>>>> 7c595378d79f1267335122c72d284c5ddcde1dbe
-
 
 void insertarIdentificador(Identificadores *, char *);
-void insertarVariable(Semanticos *, Variables *, Identificadores *, char *);
-int esVariableNueva(Semanticos *, Variables *, char *, char *);
+void insertarVariable(DobleDeclaraciones *, Variables *, Identificadores *, char *, int);
+
+int esVariableNueva(Variables *, char *);
+int tipoDeDatoVariable(Variables *, char *);
 //void insertarVariableSinRepetir(Variables *, char *);
 //int encontrarPalabra(Variables *, char *);
 //void insertarVariable(Variables *, char *)
-
-void imprimirVariables(Variables *);
-
+int transformarTipo(char *);
 
 //void recorrer(Lista *);
 //void verificarSiPuede(Lista *);
+void imprimirSegunTipo(int);
 
 
+void imprimirVariables(Variables *);
 
 /////////////////////////////////////////Para las Funciones///////////////////////////////////////////////////////////////////////////
 
@@ -80,28 +112,31 @@ void insertarFuncion(Funciones *, char *, char *);
 void agregarParametros(Parametros *, char *);
 
 void imprimirFunciones(Funciones *);
-<<<<<<< HEAD
-int buscarFuncion(Funciones *, char *);
-
-/////////////////////////////////////////////////Funciones para el control de tipos de datos////////////////////////////////
-
-void control(int, char, int );
-
-int compararTipos(int, int);
-=======
 
 ///////////////////////////////////////Para los Errores Semanticos///////////////////////////////////////////////////////////////
 
 
-void dobleDeclaracion(Semanticos *, char *,char*,char*,char* );
-void imprimirDobleDeclaracion(Semanticos *);
-void control(int, char, int );
+void insertarDobleDeclaracion(DobleDeclaraciones *, char *, int, int, int );
+void imprimirDobleDeclaracion(DobleDeclaraciones *);
 
-void comparar(int, int, char*);
 
+void insertarLValue(LValue *, char *, int, int);
+void imprimirLValue(LValue *);
+
+void control(ControlDeDatos *, int, char, int, int );
+void comparar(ControlDeDatos *, int, int, char*, int);
+void insertarControlDeDatos(ControlDeDatos *, int, char *, int, int);
+void imprimirControlDeDatos(ControlDeDatos *);
+
+
+
+/////////////////////////////////////// Para errores sinctactico /////////////////////////////////////////////
+
+void agregarCola(ErroresSintacticos *, ErroresSintacticos *, char *, int);
+
+void imprimirErrores(ErroresSintacticos *);
 
 /////////////////////////////////////////Para Mostrar Todo al Final del .L///////////////////
 
 
-void informeDeLectura(Variables *, Funciones *, Semanticos *);
->>>>>>> 7c595378d79f1267335122c72d284c5ddcde1dbe
+void informeDeLectura(Variables *, Funciones *,ControlDeDatos *, LValue *, DobleDeclaraciones *, ErroresSintacticos *);

@@ -8,7 +8,6 @@
 #define CADENA 2
 #define NUMERO 3
 #define ID 4
-#define FLOAT 5
 
 int yylineno = 1;
 %}
@@ -34,11 +33,11 @@ return    { strcpy(yylval.s.cadena, yytext); return RETURN;}
 "*="      { return MULTIASIGNACION; }
 "/="      { return DIVASIGNACION; }
 "%="      { return RESTOASIGNACION; }
-"<="      { return MENORIGUAL; } 
+"<="      { return MENORIGUAL; }
 ">="      { return MAYORIGUAL; }
 "!="      { return DISTINTO; }
 "=="      { return IGUALDAD; }
-"="       { return '='; }
+"="       { yylval.s.caracter = yytext[0]; return '='; }
 ","       { return ','; }
 ";"       { return ';'; }
 "+"       { yylval.s.caracter = yytext[0]; return '+'; }
@@ -58,18 +57,29 @@ return    { strcpy(yylval.s.cadena, yytext); return RETURN;}
 ">"       { return '>'; }
 "<"       { return '<'; }
 
-"\n"    { yylineno++; return '\n'; }
+"\n"      { yylineno++; return '\n'; }
 
-char|int|float|double|void|struct|enum|bool    { strcpy(yylval.s.cadena, yytext);                              return TIPODATO; }
-[a-zA-Z_]([a-zA-Z_]|[0-9])*                           { strcpy(yylval.s.cadena, yytext);                              return IDENTIFICADOR; }
-[0-9]+                                                { strcpy(yylval.s.cadena, yytext); yylval.s.entero = atoi(yytext); strcpy(yylval.s.tipo, "int");     return NUM; }
-\"([ -!#-~]|\\\")*\"                                  { strcpy(yylval.s.cadena, yytext); strcpy(yylval.s.tipo, "string");  return LITERALESCADENA; }
-'[ -&\(-~]'|'\\[0ntabfr"\vox']'                       { yylval.s.caracter = yytext[1]; yylval.s.entero = yytext[1]; strcpy(yylval.s.tipo, "char");       return CCARACTER; }
+char|int|float|double|void|struct|enum|bool   { strcpy(yylval.s.cadena, yytext);                                                             return TIPODATO; }
+[a-zA-Z_]([a-zA-Z_]|[0-9])*                   { strcpy(yylval.s.cadena, yytext); yylval.s.tipo = ID;                                         return IDENTIFICADOR; }
+
+[0-9]+                                        { strcpy(yylval.s.cadena, yytext); yylval.s.entero = atoi(yytext); yylval.s.tipo = NUMERO;     return NUM; }
+
+
+\"([ -!#-~]|\\\")*\"                          { strcpy(yylval.s.cadena, yytext); yylval.s.tipo = CADENA;                                     return LITERALESCADENA; }
+'[ -&\(-~]'|'\\[0ntabfr"\vox']'               { yylval.s.caracter = yytext[1]; yylval.s.entero = yytext[1]; yylval.s.tipo = CARACTER;        return CCARACTER; }
 
 
 
 
 %%
-//0[xX][A-Fa-f0-9]+                                     { strcpy(yylval.s.tipo, "int");  return HEXA; }
-//([0-9]*"."[0-9]+([eE]([\+\-]?)[0-9]+)?)|([0-9]+"."([eE]([\+\-]?)[0-9]+)?)|([0-9]+[eE][\+\-]?[0-9]+) { yylval.s.entero = atof(yytext); strcpy(yylval.s.tipo, "float"); return REAL; }
-//0[0-7]*                                               { strcpy(yylval.s.tipo, "int");        return OCTAL; }
+
+// 0[0-7]*                                       { return OCTAL; }
+// 0[xX][A-Fa-f0-9]+                             { return HEXA; }
+// ([0-9]*"."[0-9]+([eE]([\+\-]?)[0-9]+)?)|([0-9]+"."([eE]([\+\-]?)[0-9]+)?)|([0-9]+[eE][\+\-]?[0-9]+) { return REAL; }
+
+
+/*
+%token <s> HEXA
+%token <s> OCTAL
+%token <s> REAL
+*/

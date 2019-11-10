@@ -1,28 +1,22 @@
-<<<<<<< HEAD
-int main () {
-
-
 int a,b;
 
-for(int i = 0; i<4; i++){
-
 a=a+b;
-=======
-int juan;
-int sumar(int,int);
-int restar(char,char);
-int multiplicar(char);
-int eric;
-int piter;
-char eric;
-int a,b,c;
-char g;
-int b;
-char c;
->>>>>>> 7c595378d79f1267335122c72d284c5ddcde1dbe
 
-}
+int a;
 
-return 0;
+c=a+1;
 
-}
+for(;;){}
+
+while(){}
+
+
+if(){}
+
+return a;
+
+a = "hola" + "hola";
+
+
+
+int main();

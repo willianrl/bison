@@ -75,13 +75,13 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 39 "tp4correccion.y"
+#line 46 "tp4correccion.y"
 
 struct{
   char cadena[30];
   char caracter;
   int entero;
-  int tipo[10];
+  int tipo;
 }s;
 
 
