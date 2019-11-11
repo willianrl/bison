@@ -1,8 +1,8 @@
 # depslib dependency file v1.0
-1573351256 source:c:\users\usuario\desktop\tp integrador sintaxys\bison\tp\funcionesdelista.c
+1573351362 source:c:\users\usuario\desktop\tp integrador sintaxys\bison\tp\funcionesdelista.c
 	"funcionesDeLista.h"
 
-1573351158 c:\users\usuario\desktop\tp integrador sintaxys\bison\tp\funcionesdelista.h
+1573351366 c:\users\usuario\desktop\tp integrador sintaxys\bison\tp\funcionesdelista.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -20,7 +20,7 @@
 
 1573351328 c:\users\usuario\desktop\tp integrador sintaxys\bison\tp\tp4correccion.tab.h
 
-1573351160 source:c:\users\usuario\desktop\tp integrador sintaxys\bison\tp\tp4correccion.tab.c
+1573351328 source:c:\users\usuario\desktop\tp integrador sintaxys\bison\tp\tp4correccion.tab.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>

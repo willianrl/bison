@@ -1,22 +1,8 @@
-int a,b;
-
-a=a+b;
-
-int a;
-
-c=a+1;
-
-for(;;){}
-
-while(){}
+int main()
+{
 
 
-if(){}
-
-return a;
-
-a = "hola" + "hola";
+int z;
 
 
-
-int main();
+}
