@@ -1,0 +1,22 @@
+int main(){
+
+	int z,a,c;
+	int b;
+	char t = 'f';
+
+	z = "cadena"+t;
+	b = 2+"eric";
+	c = b+z;
+	
+
+	sumar(a,c);
+
+}
+
+
+int sumar(int a,int b){
+	int total;
+
+	total = a+b;
+	return total;
+}

@@ -1,0 +1,35 @@
+# depslib dependency file v1.0
+1573515135 source:c:\sintaxistp\gnuwin32\bin\tp5\funcionesdelista.c
+	"funcionesDeLista.h"
+
+1573515135 c:\sintaxistp\gnuwin32\bin\tp5\funcionesdelista.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+
+1573516621 source:c:\sintaxistp\gnuwin32\bin\tp5\lex.yy.c
+	<stdio.h>
+	<stdlib.h>
+	<unistd.h>
+	<io.h>
+	<stdlib.h>
+	"tp5.tab.h"
+	<string.h>
+	<stdlib.h>
+	<stdlib.h>
+
+1573516603 c:\sintaxistp\gnuwin32\bin\tp5\tp5.tab.h
+
+1573516602 source:c:\sintaxistp\gnuwin32\bin\tp5\tp5.tab.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"funcionesDeLista.h"
+	<stddef.h>
+	<libintl.h>
+	<alloca.h>
+	<malloc.h>
+	<stdlib.h>
+	<stdlib.h>
+	<stdio.h>
+
