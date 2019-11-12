@@ -20,3 +20,10 @@ int sumar(int a,int b){
 	total = a+b;
 	return total;
 }
+
+
+if(){
+}
+
+
+
